@@ -5,8 +5,9 @@ import { HomePage } from './pages/HomePage';
 import { DashboardPage } from './pages/DashboardPage';
 import { EventsPage } from './pages/EventsPage';
 import { MyProfilePage } from './pages/MyProfilePage';
+import type { JSX } from 'react';
 
-const App = () => {
+const App = (): JSX.Element => {
   return (
     <BrowserRouter>
       <Routes>

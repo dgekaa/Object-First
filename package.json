@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "type-check": "tsc --project tsconfig.app.json --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "preview": "vite preview",
@@ -52,7 +53,8 @@
     "vite": "^7.0.4"
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
+    "src/**/*.{ts,tsx}": [
+      "tsc --project tsconfig.app.json --noEmit",
       "eslint --fix",
       "prettier --write"
     ],

@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { Counter } from '../components/Counter';
+import type { JSX } from 'react';
 
-export const DashboardPage = () => {
+export const DashboardPage = (): JSX.Element => {
   return (
     <DashboardContainer>
       <Title>Dashboard</Title>

@@ -5,8 +5,9 @@ import {
   decrement,
   incrementByAmount,
 } from '../store/slices/counterSlice';
+import type { JSX } from 'react';
 
-export const Counter = () => {
+export const Counter = (): JSX.Element => {
   const count = useAppSelector(state => state.counter.value);
   const dispatch = useAppDispatch();
 

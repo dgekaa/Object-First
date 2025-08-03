@@ -1,1 +1,3 @@
-export const EventsPage = () => <div></div>;
+import type { JSX } from 'react';
+
+export const EventsPage = (): JSX.Element => <div></div>;
