@@ -1,4 +1,6 @@
-export default {
+import type { UserConfig } from '@commitlint/types';
+
+const config: UserConfig = {
   extends: ['@commitlint/config-conventional'],
   rules: {
     'type-enum': [
@@ -29,3 +31,5 @@ export default {
     'type-empty': [2, 'never'],
   },
 };
+
+export default config;
