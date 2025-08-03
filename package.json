@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "type-check": "tsc --project tsconfig.app.json --noEmit",
+    "check-all": "npm run type-check && npm run lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "preview": "vite preview",
@@ -54,7 +55,6 @@
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
-      "tsc --project tsconfig.app.json --noEmit",
       "eslint --fix",
       "prettier --write"
     ],
