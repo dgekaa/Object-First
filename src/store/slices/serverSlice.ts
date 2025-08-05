@@ -2,14 +2,28 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { Server } from '../../types/server';
 import { generateServerId } from '../../utils/idGenerators';
 
+const SERVER_STATUS = {
+  RUNNING: 'Running',
+  STOPPED: 'Stopped',
+} as const;
+
+const DEFAULT_MEMORY_GB = 8;
+const DEFAULT_CPU_COUNT = 1;
+const DEFAULT_UPTIME_STOPPED = '0:00:00:00';
+const DEFAULT_UPTIME_STARTED = '0:00:00:01';
+
+type SortDirection = 'asc' | 'desc';
+
 interface ServerState {
   servers: Server[];
+
   notifications: {
     hasNew: boolean;
   };
+
   sorting: {
     column: keyof Server | null;
-    direction: 'asc' | 'desc';
+    direction: SortDirection;
   };
 }
 
@@ -81,7 +95,7 @@ const serverSlice = createSlice({
   reducers: {
     setSorting: (
       state,
-      action: PayloadAction<{ column: keyof Server; direction: 'asc' | 'desc' }>
+      action: PayloadAction<{ column: keyof Server; direction: SortDirection }>
     ) => {
       state.sorting.column = action.payload.column;
       state.sorting.direction = action.payload.direction;
@@ -95,19 +109,18 @@ const serverSlice = createSlice({
       state,
       action: PayloadAction<{ name: string; cpuCount?: number | string }>
     ) => {
-      const DEFAULT_MEMORY_GB = 8;
       const cpuCount = action.payload.cpuCount
         ? Number(action.payload.cpuCount)
-        : 1;
+        : DEFAULT_CPU_COUNT;
 
       const newServer: Server = {
         id: generateServerId(),
-        status: 'Stopped',
+        status: SERVER_STATUS.STOPPED,
         hostServer: action.payload.name,
         cpuPercent: cpuCount,
         memoryPercent: DEFAULT_MEMORY_GB,
         memoryValue: `${DEFAULT_MEMORY_GB} GiB`,
-        uptime: '0:00:00:00',
+        uptime: DEFAULT_UPTIME_STOPPED,
         alerts: { count: 0, type: 'All good' },
       };
 
@@ -116,14 +129,14 @@ const serverSlice = createSlice({
 
     toggleServerStatus: (state, action: PayloadAction<string>) => {
       const server = state.servers.find(s => s.id === action.payload);
-      if (server) {
-        if (server.status === 'Running') {
-          server.status = 'Stopped';
-          server.uptime = '0:00:00:00';
-        } else {
-          server.status = 'Running';
-          server.uptime = '0:00:00:01';
-        }
+      if (!server) return;
+
+      if (server.status === SERVER_STATUS.RUNNING) {
+        server.status = SERVER_STATUS.STOPPED;
+        server.uptime = DEFAULT_UPTIME_STOPPED;
+      } else {
+        server.status = SERVER_STATUS.RUNNING;
+        server.uptime = DEFAULT_UPTIME_STARTED;
       }
     },
   },

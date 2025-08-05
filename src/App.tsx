@@ -11,9 +11,11 @@ import { LoadingSpinner } from './components/LoadingSpinner';
 const EventsPage = lazy(() =>
   import('./pages/EventsPage').then(m => ({ default: m.EventsPage }))
 );
+
 const MyProfilePage = lazy(() =>
   import('./pages/MyProfilePage').then(m => ({ default: m.MyProfilePage }))
 );
+
 const NotificationsPage = lazy(() =>
   import('./pages/NotificationsPage').then(m => ({
     default: m.NotificationsPage,
