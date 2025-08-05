@@ -1,86 +1,125 @@
 import styled from 'styled-components';
-import { Counter } from '../components/Counter';
+import { useState, useCallback, useMemo, Suspense, lazy } from 'react';
+import { useAppSelector, useAppDispatch } from '../hooks/redux';
+import { StateChart } from '../components/StateChart';
+import { TrendChart } from '../components/TrendChart';
+import { ServerTable } from '../components/ServerTable';
+import { LoadingSpinner } from '../components/LoadingSpinner';
+import { Button } from '../components/Button/';
+import { addServer } from '../store/slices/serverSlice';
 import type { JSX } from 'react';
 
+const NewVMModal = lazy(() =>
+  import('../components/Wizard').then(m => ({ default: m.NewVMModal }))
+);
+
 export const DashboardPage = (): JSX.Element => {
+  const dispatch = useAppDispatch();
+  const servers = useAppSelector(state => state.servers.servers);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleNewClick = useCallback(() => {
+    setIsModalOpen(true);
+  }, []);
+
+  const handleModalClose = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
+
+  const handleVMCreate = useCallback(
+    (vmName: string, cpuCount?: number | string) => {
+      dispatch(addServer({ name: vmName, cpuCount }));
+      setIsModalOpen(false);
+    },
+    [dispatch]
+  );
+
+  const serversCount = useMemo(() => servers.length, [servers.length]);
+
   return (
-    <DashboardContainer>
-      <Title>Dashboard</Title>
-      <Description>
-        Панель управления с основными метриками и элементами управления.
-      </Description>
+    <>
+      <DashboardContainer>
+        <TopSection>
+          <StateChart title="State" />
+          <TrendChart title="Trend" period="Last 14 days" />
+        </TopSection>
 
-      <GridContainer>
-        <Card>
-          <CardTitle>Счетчик</CardTitle>
-          <Counter />
-        </Card>
+        <VirtualMachinesSection>
+          <VMHeader>
+            <VMTitle>
+              Virtual machines <VMCount>{serversCount}</VMCount>
+            </VMTitle>
+            <Button onClick={handleNewClick} icon={<PlusIcon>+</PlusIcon>}>
+              New
+            </Button>
+          </VMHeader>
 
-        <Card>
-          <CardTitle>Статистика</CardTitle>
-          <StatText>Активные пользователи: 1,234</StatText>
-          <StatText>Всего событий: 5,678</StatText>
-          <StatText>Успешных операций: 98.5%</StatText>
-        </Card>
+          <ServerTable servers={servers} />
+        </VirtualMachinesSection>
+      </DashboardContainer>
 
-        <Card>
-          <CardTitle>Быстрые действия</CardTitle>
-          <ActionButton>Создать событие</ActionButton>
-          <ActionButton>Просмотр отчетов</ActionButton>
-          <ActionButton>Настройки</ActionButton>
-        </Card>
-      </GridContainer>
-    </DashboardContainer>
+      {isModalOpen && (
+        <Suspense fallback={<LoadingSpinner />}>
+          <NewVMModal
+            isOpen={isModalOpen}
+            onClose={handleModalClose}
+            onSubmit={handleVMCreate}
+          />
+        </Suspense>
+      )}
+    </>
   );
 };
 
 const DashboardContainer = styled.div`
-  padding: 20px;
+  padding: 20px 0;
+  max-width: 1200px;
+  margin: 0 auto;
 `;
 
-const Title = styled.h1`
-  margin: 0 0 10px 0;
+const PlusIcon = styled.span`
+  font-size: 16px;
+  font-weight: 300;
 `;
 
-const Description = styled.p`
-  margin: 0 0 30px 0;
-  color: #666;
-`;
-
-const GridContainer = styled.div`
+const TopSection = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-  margin-top: 30px;
-`;
+  grid-template-columns: 440px 1fr;
+  gap: 16px;
+  margin-bottom: 32px;
+  max-width: 100%;
+  height: 292px;
 
-const Card = styled.div`
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-`;
-
-const CardTitle = styled.h3`
-  margin: 0 0 15px 0;
-`;
-
-const StatText = styled.p`
-  margin: 5px 0;
-  color: #333;
-`;
-
-const ActionButton = styled.button`
-  margin: 5px;
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: #0056b3;
+  @media (max-width: 1240px) {
+    grid-template-columns: 1fr;
+    height: auto;
   }
+`;
+
+const VirtualMachinesSection = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const VMHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 24px 0;
+`;
+
+const VMTitle = styled.h2`
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--color-text-primary);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const VMCount = styled.span`
+  color: var(--color-purple);
+  font-size: 14px;
+  font-weight: 500;
 `;
