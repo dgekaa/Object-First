@@ -94,7 +94,7 @@ export const NewVMModal = ({
 
   const validateCpu = useCallback((count: number | string): string => {
     if (count === '' || count === null || count === undefined) {
-      return '';
+      return 'CPU count is required';
     }
     const numCount = Number(count);
     if (isNaN(numCount) || numCount < 1 || numCount > 12) {
@@ -105,7 +105,8 @@ export const NewVMModal = ({
 
   const handleCpuChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newCount = e.target.value === '' ? '' : Number(e.target.value);
+      const newValue = e.target.value;
+      const newCount = newValue === '' ? '' : Number(newValue);
       setCpuCount(newCount);
       const validationError = validateCpu(newCount);
       setCpuError(validationError);
@@ -115,7 +116,7 @@ export const NewVMModal = ({
 
   const validateRam = useCallback((size: number | string): string => {
     if (size === '' || size === null || size === undefined) {
-      return '';
+      return 'RAM size is required';
     }
     const numSize = Number(size);
     if (isNaN(numSize) || numSize < 1 || numSize > 50) {
@@ -126,7 +127,8 @@ export const NewVMModal = ({
 
   const handleRamChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newSize = e.target.value === '' ? '' : Number(e.target.value);
+      const newValue = e.target.value;
+      const newSize = newValue === '' ? '' : Number(newValue);
       setRamSize(newSize);
       const validationError = validateRam(newSize);
       setRamError(validationError);
@@ -183,8 +185,10 @@ export const NewVMModal = ({
     if (step === 1) {
       return Boolean(vmName.trim() && !error);
     } else if (step === 2) {
-      const hasCpuValue = cpuCount !== null && cpuCount !== undefined;
-      const hasRamValue = ramSize !== null && ramSize !== undefined;
+      const hasCpuValue =
+        cpuCount !== null && cpuCount !== undefined && cpuCount !== '';
+      const hasRamValue =
+        ramSize !== null && ramSize !== undefined && ramSize !== '';
       return Boolean(
         vmName.trim() &&
           !error &&

@@ -23,9 +23,13 @@ const VMSettingsStepComponent = ({
 }: VMSettingsStepProps): JSX.Element => {
   const handleCpuChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const num = Number(e.target.value);
-      if (!isNaN(num)) {
+      if (e.target.value === '') {
         onCpuChange(e);
+      } else {
+        const num = Number(e.target.value);
+        if (!isNaN(num)) {
+          onCpuChange(e);
+        }
       }
     },
     [onCpuChange]
@@ -33,9 +37,13 @@ const VMSettingsStepComponent = ({
 
   const handleRamChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const num = Number(e.target.value);
-      if (!isNaN(num)) {
+      if (e.target.value === '') {
         onRamChange(e);
+      } else {
+        const num = Number(e.target.value);
+        if (!isNaN(num)) {
+          onRamChange(e);
+        }
       }
     },
     [onRamChange]
@@ -48,10 +56,16 @@ const VMSettingsStepComponent = ({
     [onRamSliderChange]
   );
 
-  const memoizedRamSize = useMemo(() => ramSize || 24, [ramSize]);
-  const memoizedCpuCount = useMemo(() => cpuCount || 6, [cpuCount]);
+  const memoizedRamSize = useMemo(
+    () => (ramSize !== undefined && ramSize !== null ? ramSize : 24),
+    [ramSize]
+  );
+  const memoizedCpuCount = useMemo(
+    () => (cpuCount !== undefined && cpuCount !== null ? cpuCount : 6),
+    [cpuCount]
+  );
   const memoizedEnableCounters = useMemo(
-    () => enableCounters || false,
+    () => (enableCounters !== undefined ? enableCounters : false),
     [enableCounters]
   );
 
@@ -68,7 +82,7 @@ const VMSettingsStepComponent = ({
       <FormInput
         type="number"
         label="CPU"
-        value={memoizedCpuCount || 6}
+        value={memoizedCpuCount}
         onChange={handleCpuChange}
         error={cpuError}
         helpText="Enter number of processors up to 12"
@@ -101,7 +115,7 @@ const VMSettingsStepComponent = ({
       <FormInput
         type="number"
         label="RAM"
-        value={memoizedRamSize || 24}
+        value={memoizedRamSize}
         onChange={handleRamChange}
         error={ramError}
         helpText="Enter memory amount up to 50GB"
@@ -138,10 +152,7 @@ const VMSettingsStepComponent = ({
 
   const MemoizedMemorySlider = useMemo(() => {
     return (
-      <MemorySlider
-        value={memoizedRamSize || 24}
-        onChange={handleRamSliderChange}
-      />
+      <MemorySlider value={memoizedRamSize} onChange={handleRamSliderChange} />
     );
   }, [memoizedRamSize, handleRamSliderChange]);
 

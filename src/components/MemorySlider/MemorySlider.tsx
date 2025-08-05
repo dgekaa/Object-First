@@ -90,6 +90,8 @@ const MemorySliderComponent = ({
 
   const currentValue = value === '' ? 0 : Number(value);
 
+  const isIndicatorVisible = currentValue >= 0 && currentValue <= 50;
+
   return (
     <SliderContainer>
       <Slider
@@ -103,16 +105,21 @@ const MemorySliderComponent = ({
           <SliderSegment color="var(--color-yellow)" width={36} />
         </SliderTrack>
 
-        <SliderIndicator
-          position={getSliderPosition(value)}
-          isDragging={isDragging}
-        />
-        <CurrentValue
-          position={getSliderPosition(value)}
-          isDragging={isDragging}
-        >
-          {currentValue} GB
-        </CurrentValue>
+        {isIndicatorVisible && (
+          <SliderIndicator
+            position={getSliderPosition(value)}
+            isDragging={isDragging}
+          />
+        )}
+
+        {isIndicatorVisible && (
+          <CurrentValue
+            position={getSliderPosition(value)}
+            isDragging={isDragging}
+          >
+            {currentValue} GB
+          </CurrentValue>
+        )}
 
         <SliderTick position={32} />
         <SliderTick position={64} />
