@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Z_INDEX } from '../../styles';
 
 export const FormGroup = styled.div`
   margin-bottom: 32px;
@@ -27,9 +28,11 @@ export const FloatingInputContainer = styled.div.withConfig({
 
   &:focus-within {
     border: 1px solid
-      ${(props): string => (props.hasError ? 'var(--color-red)' : '#5F3196')};
+      ${(props): string =>
+        props.hasError ? 'var(--color-red)' : 'var(--color-purple)'};
     outline: 2px solid
-      ${(props): string => (props.hasError ? 'var(--color-red)' : '#5F3196')};
+      ${(props): string =>
+        props.hasError ? 'var(--color-red)' : 'var(--color-purple)'};
     outline-offset: 0px;
   }
 `;
@@ -113,7 +116,7 @@ export const FloatingLabel = styled.label.withConfig({
   pointer-events: none;
   transition: all 0.2s ease-in-out;
   transform-origin: left;
-  z-index: 1;
+  z-index: ${Z_INDEX.BASE};
 
   ${FloatingInputContainer}:focus-within & {
     top: -12px;

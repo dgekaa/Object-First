@@ -27,8 +27,8 @@ export const NewVMModal = ({
   const [vmName, setVmName] = useState('');
   const [step, setStep] = useState(1);
   const [error, setError] = useState('');
-  const [cpuCount, setCpuCount] = useState<number | string>('');
-  const [ramSize, setRamSize] = useState<number | string>('');
+  const [cpuCount, setCpuCount] = useState<number | string>(6);
+  const [ramSize, setRamSize] = useState<number | string>(24);
   const [enableCounters, setEnableCounters] = useState(false);
   const [cpuError, setCpuError] = useState('');
   const [ramError, setRamError] = useState('');
@@ -62,8 +62,8 @@ export const NewVMModal = ({
   useEffect(() => {
     const hasChanges =
       Boolean(vmName.trim()) ||
-      cpuCount !== '' ||
-      ramSize !== '' ||
+      cpuCount !== 6 ||
+      ramSize !== 24 ||
       enableCounters;
     setHasUnsavedChanges(hasChanges);
   }, [vmName, cpuCount, ramSize, enableCounters]);
@@ -94,7 +94,7 @@ export const NewVMModal = ({
 
   const validateCpu = useCallback((count: number | string): string => {
     if (count === '' || count === null || count === undefined) {
-      return 'CPU count is required';
+      return '';
     }
     const numCount = Number(count);
     if (isNaN(numCount) || numCount < 1 || numCount > 12) {
@@ -115,7 +115,7 @@ export const NewVMModal = ({
 
   const validateRam = useCallback((size: number | string): string => {
     if (size === '' || size === null || size === undefined) {
-      return 'RAM size is required';
+      return '';
     }
     const numSize = Number(size);
     if (isNaN(numSize) || numSize < 1 || numSize > 50) {
@@ -183,10 +183,8 @@ export const NewVMModal = ({
     if (step === 1) {
       return Boolean(vmName.trim() && !error);
     } else if (step === 2) {
-      const hasCpuValue =
-        cpuCount !== '' && cpuCount !== null && cpuCount !== undefined;
-      const hasRamValue =
-        ramSize !== '' && ramSize !== null && ramSize !== undefined;
+      const hasCpuValue = cpuCount !== null && cpuCount !== undefined;
+      const hasRamValue = ramSize !== null && ramSize !== undefined;
       return Boolean(
         vmName.trim() &&
           !error &&
@@ -232,8 +230,8 @@ export const NewVMModal = ({
     setError('');
     setCpuError('');
     setRamError('');
-    setCpuCount('');
-    setRamSize('');
+    setCpuCount(6);
+    setRamSize(24);
     setEnableCounters(false);
     setShowConfirmation(false);
     setHasUnsavedChanges(false);

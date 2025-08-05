@@ -53,7 +53,7 @@ const ChartAreaComponent = ({ data, height }: ChartAreaProps): JSX.Element => {
       area: {
         type: 'monotone' as const,
         dataKey: 'value',
-        stroke: '#8B5CF6',
+        stroke: 'var(--color-purple)',
         strokeWidth: 2,
         fill: `url(#${gradientId})`,
         strokeLinecap: 'round' as const,
@@ -76,8 +76,16 @@ const ChartAreaComponent = ({ data, height }: ChartAreaProps): JSX.Element => {
         <AreaChart data={data} margin={chartConfig.margin}>
           <defs>
             <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#8B5CF6" stopOpacity={0.3} />
-              <stop offset="100%" stopColor="#8B5CF6" stopOpacity={0.05} />
+              <stop
+                offset="0%"
+                stopColor="var(--color-purple)"
+                stopOpacity={0.3}
+              />
+              <stop
+                offset="100%"
+                stopColor="var(--color-purple)"
+                stopOpacity={0.05}
+              />
             </linearGradient>
           </defs>
 

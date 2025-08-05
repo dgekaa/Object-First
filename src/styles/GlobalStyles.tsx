@@ -31,22 +31,22 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--color-background-subtle);
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
+    background: var(--color-light-gray);
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
+    background: var(--color-light-gray);
   }
 
   html {
     scrollbar-width: thin;
-    scrollbar-color: #c1c1c1 #f1f1f1;
+    scrollbar-color:var(--color-light-gray) var(--color-background-subtle);
   }
 
   h1 {

@@ -21,72 +21,56 @@ const VMSettingsStepComponent = ({
   onRamIncrease,
   onRamDecrease,
 }: VMSettingsStepProps): JSX.Element => {
-  const [touchedFields, setTouchedFields] = React.useState<{
-    cpu: boolean;
-    ram: boolean;
-  }>({ cpu: false, ram: false });
-
   const handleCpuChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!touchedFields.cpu) {
-        setTouchedFields(prev => ({ ...prev, cpu: true }));
-      }
       const num = Number(e.target.value);
       if (!isNaN(num)) {
         onCpuChange(e);
       }
     },
-    [touchedFields.cpu, onCpuChange]
+    [onCpuChange]
   );
 
   const handleRamChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!touchedFields.ram) {
-        setTouchedFields(prev => ({ ...prev, ram: true }));
-      }
       const num = Number(e.target.value);
       if (!isNaN(num)) {
         onRamChange(e);
       }
     },
-    [touchedFields.ram, onRamChange]
+    [onRamChange]
   );
 
   const handleRamSliderChange = useCallback(
     (value: number) => {
-      if (!touchedFields.ram) {
-        setTouchedFields(prev => ({ ...prev, ram: true }));
-      }
       onRamSliderChange(value);
     },
-    [touchedFields.ram, onRamSliderChange]
+    [onRamSliderChange]
   );
 
-  const memoizedRamSize = useMemo(() => ramSize, [ramSize]);
-  const memoizedCpuCount = useMemo(() => cpuCount, [cpuCount]);
+  const memoizedRamSize = useMemo(() => ramSize || 24, [ramSize]);
+  const memoizedCpuCount = useMemo(() => cpuCount || 6, [cpuCount]);
   const memoizedEnableCounters = useMemo(
-    () => enableCounters,
+    () => enableCounters || false,
     [enableCounters]
   );
 
   const handleCpuIncrease = useCallback(() => {
-    if (!touchedFields.cpu) setTouchedFields(prev => ({ ...prev, cpu: true }));
     onCpuIncrease();
-  }, [touchedFields.cpu, onCpuIncrease]);
+  }, [onCpuIncrease]);
 
   const handleCpuDecrease = useCallback(() => {
-    if (!touchedFields.cpu) setTouchedFields(prev => ({ ...prev, cpu: true }));
     onCpuDecrease();
-  }, [touchedFields.cpu, onCpuDecrease]);
+  }, [onCpuDecrease]);
 
   const MemoizedCpuInput = useMemo(() => {
     return (
       <FormInput
         type="number"
         label="CPU"
-        value={memoizedCpuCount}
+        value={memoizedCpuCount || 6}
         onChange={handleCpuChange}
-        error={touchedFields.cpu ? cpuError : ''}
+        error={cpuError}
         helpText="Enter number of processors up to 12"
         pattern="[0-9]*"
         min={1}
@@ -99,30 +83,27 @@ const VMSettingsStepComponent = ({
   }, [
     memoizedCpuCount,
     handleCpuChange,
-    touchedFields.cpu,
     cpuError,
     handleCpuIncrease,
     handleCpuDecrease,
   ]);
 
   const handleRamIncrease = useCallback(() => {
-    if (!touchedFields.ram) setTouchedFields(prev => ({ ...prev, ram: true }));
     onRamIncrease();
-  }, [touchedFields.ram, onRamIncrease]);
+  }, [onRamIncrease]);
 
   const handleRamDecrease = useCallback(() => {
-    if (!touchedFields.ram) setTouchedFields(prev => ({ ...prev, ram: true }));
     onRamDecrease();
-  }, [touchedFields.ram, onRamDecrease]);
+  }, [onRamDecrease]);
 
   const MemoizedRamInput = useMemo(() => {
     return (
       <FormInput
         type="number"
         label="RAM"
-        value={memoizedRamSize}
+        value={memoizedRamSize || 24}
         onChange={handleRamChange}
-        error={touchedFields.ram ? ramError : ''}
+        error={ramError}
         helpText="Enter memory amount up to 50GB"
         pattern="[0-9]*"
         min={1}
@@ -135,7 +116,6 @@ const VMSettingsStepComponent = ({
   }, [
     memoizedRamSize,
     handleRamChange,
-    touchedFields.ram,
     ramError,
     handleRamIncrease,
     handleRamDecrease,
@@ -158,7 +138,10 @@ const VMSettingsStepComponent = ({
 
   const MemoizedMemorySlider = useMemo(() => {
     return (
-      <MemorySlider value={memoizedRamSize} onChange={handleRamSliderChange} />
+      <MemorySlider
+        value={memoizedRamSize || 24}
+        onChange={handleRamSliderChange}
+      />
     );
   }, [memoizedRamSize, handleRamSliderChange]);
 

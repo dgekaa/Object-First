@@ -89,7 +89,7 @@ export const StyledButton = styled.button<StyledButtonProps>`
 
   &:disabled {
     background-color: rgba(29, 27, 32, 0.12);
-    color: #79777b;
+    color: var(--color-text-secondary);
     opacity: 1;
     cursor: not-allowed;
     transform: none;

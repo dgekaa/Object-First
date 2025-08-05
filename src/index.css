@@ -1,16 +1,12 @@
 :root {
-  line-height: 1.5;
-  font-weight: 400;
-
-  /* Color variables */
   --color-text-primary: #212529;
   --color-text-secondary: #495057;
-
-  --color-text-light-gray: #ccc4ce;
 
   --color-surface: #ffffff;
   --color-background-subtle: #f8f9fa;
   --color-border-subtle: #e9ecef;
+
+  --color-light-gray: #dcd4de;
 
   --color-purple: #5f3196;
 

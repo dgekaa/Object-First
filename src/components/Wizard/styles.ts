@@ -25,7 +25,7 @@ export const ActionButtons = styled.div`
 /* WizardSidebar styles */
 export const LeftPanel = styled.div`
   width: 244px;
-  background: #5f3196;
+  background: var(--color-purple);
   position: relative;
   padding: 24px;
   display: flex;
@@ -74,8 +74,8 @@ export const StepNumber = styled.div.withConfig({
   height: 24px;
   background: transparent;
   color: ${(props): string => {
-    if (props.completed) return 'white';
-    if (props.active) return '#E9E0EB';
+    if (props.completed) return 'var(--color-background-subtle)';
+    if (props.active) return 'var(--color-light-gray)';
     return 'rgba(255, 255, 255, 0.6)';
   }};
   display: flex;
@@ -89,8 +89,8 @@ export const StepText = styled.div.withConfig({
   shouldForwardProp: (prop): boolean => !['active', 'completed'].includes(prop),
 })<{ active?: boolean; completed?: boolean }>`
   color: ${(props): string => {
-    if (props.completed) return 'white';
-    if (props.active) return '#E9E0EB';
+    if (props.completed) return 'var(--color-background-subtle)';
+    if (props.active) return 'var(--color-light-gray)';
     return 'rgba(255, 255, 255, 0.6)';
   }};
   font-size: 14px;

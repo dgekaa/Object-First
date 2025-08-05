@@ -20,7 +20,7 @@ export const SliderTrack = styled.div`
   border-radius: 3px;
   overflow: hidden;
   display: flex;
-  background: #f0f0f0;
+  background: var(--color-light-gray);
 `;
 
 export const Slider = styled.div`
@@ -90,9 +90,9 @@ export const SliderTick = styled.div.withConfig({
   top: -8px;
   width: 1px;
   height: 18px;
-  background: #d1d5db;
+  background: var(--color-light-gray);
   transform: translateX(-50%);
-  z-index: ${Z_INDEX.BASE + 1};
+  z-index: ${Z_INDEX.BASE};
 `;
 
 export const SliderScale = styled.div`
@@ -143,7 +143,7 @@ export const RecommendedBracket = styled.div`
   left: 32%;
   right: 36%;
   height: 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--color-light-gray);
   border-top: none;
   border-radius: 0 0 4px 4px;
 

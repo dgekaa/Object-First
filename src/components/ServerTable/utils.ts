@@ -1,3 +1,5 @@
+import { Z_INDEX } from '../../styles';
+
 export const getStatusColor = (status: string): string => {
   return status === 'Running' ? 'var(--color-green)' : 'var(--color-red)';
 };
@@ -108,7 +110,7 @@ export const fallbackCopyNotification = (text: string): void => {
     border-radius: 8px;
     padding: 16px 20px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    z-index: 10000;
+    z-index: ${Z_INDEX.MODAL_HIGH};
     font-family: inherit;
     font-size: 14px;
     color: var(--color-text-primary);
