@@ -38,3 +38,8 @@ export type FormInputProps =
   | TextInputProps
   | NumberInputProps
   | CheckboxInputProps;
+
+export interface ValidationResult {
+  isValid: boolean;
+  error?: string;
+}

@@ -1,26 +1,5 @@
 import React from 'react';
-
-export const calculateTextWidth = (
-  text: string,
-  fontSize: number = 14,
-  fontWeight: number = 600,
-  fontFamily: string = 'system-ui, -apple-system, sans-serif'
-): number => {
-  const canvas = document.createElement('canvas');
-  const context = canvas.getContext('2d');
-
-  if (!context) {
-    const baseCharWidth = fontSize * 0.6;
-    const weightMultiplier = fontWeight >= 600 ? 1.1 : 1.0;
-    return Math.ceil(text.length * baseCharWidth * weightMultiplier);
-  }
-
-  context.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
-
-  const metrics = context.measureText(text);
-
-  return Math.ceil(metrics.width);
-};
+import { ValidationResult } from './types';
 
 export const isEmpty = (value: unknown): boolean => {
   return value === '' || value === null || value === undefined;
@@ -28,10 +7,6 @@ export const isEmpty = (value: unknown): boolean => {
 
 export const hasValue = (value: unknown): boolean => {
   return !isEmpty(value);
-};
-
-export const limitStringLength = (value: string, maxLength: number): string => {
-  return value.length > maxLength ? value.slice(0, maxLength) : value;
 };
 
 export const isValidNumericInput = (value: string): boolean => {
@@ -90,30 +65,6 @@ export const handleNumericInputChange = (
   return true;
 };
 
-export const INPUT_CONSTANTS = {
-  MAX_NUMBER_LENGTH: 20,
-  DEFAULT_CHAR_WIDTH: 8,
-  PADDING_NORMAL: 16,
-  PADDING_FOCUSED: 14,
-  SUFFIX_GAP: 4,
-} as const;
-
-export const calculateSuffixPosition = (
-  textWidth: number,
-  isFocused: boolean = false
-): number => {
-  const padding = isFocused
-    ? INPUT_CONSTANTS.PADDING_FOCUSED
-    : INPUT_CONSTANTS.PADDING_NORMAL;
-
-  return padding + textWidth + INPUT_CONSTANTS.SUFFIX_GAP;
-};
-
-export interface ValidationResult {
-  isValid: boolean;
-  error?: string;
-}
-
 export const validateNumberInput = (
   value: string | number,
   min?: number,
@@ -138,11 +89,4 @@ export const validateNumberInput = (
   }
 
   return { isValid: true };
-};
-
-export const formatNumber = (value: number, decimalPlaces?: number): string => {
-  if (decimalPlaces !== undefined) {
-    return value.toFixed(decimalPlaces);
-  }
-  return value.toString();
 };

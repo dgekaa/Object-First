@@ -4,7 +4,6 @@ import React from 'react';
 import { ErrorIcon } from '../../icons';
 import {
   hasValue,
-  INPUT_CONSTANTS,
   handleNumericInputChange,
   validateNumberInput,
 } from './utils';
@@ -94,7 +93,7 @@ const FormInputComponent = (props: FormInputProps): JSX.Element => {
         ): void => {
           const success = handleNumericInputChange(
             e,
-            INPUT_CONSTANTS.MAX_NUMBER_LENGTH,
+            10,
             onChange,
             (value: string): void => {
               setInternalValue(value);
@@ -147,7 +146,7 @@ const FormInputComponent = (props: FormInputProps): JSX.Element => {
                 type="text"
                 value={displayValue}
                 onChange={handleNumberChange}
-                maxLength={INPUT_CONSTANTS.MAX_NUMBER_LENGTH}
+                maxLength={10}
                 placeholder=" "
                 hasError={!!currentError}
                 hasValue={hasValue(displayValue)}
