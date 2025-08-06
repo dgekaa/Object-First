@@ -6,6 +6,9 @@ import { FormInput } from '../FormInput/';
 import { MemorySlider } from '../MemorySlider';
 import { VMSettingsStepProps } from './types';
 
+const DEFAULT_CPU_COUNT = 6;
+const DEFAULT_RAM_SIZE = 24;
+
 const VMSettingsStepComponent = ({
   cpuCount,
   ramSize,
@@ -49,33 +52,14 @@ const VMSettingsStepComponent = ({
     [onRamChange]
   );
 
-  const handleRamSliderChange = useCallback(
-    (value: number) => {
-      onRamSliderChange(value);
-    },
-    [onRamSliderChange]
-  );
+  const handleRamSliderChange = onRamSliderChange;
 
-  const memoizedRamSize = useMemo(
-    () => (ramSize !== undefined && ramSize !== null ? ramSize : 24),
-    [ramSize]
-  );
-  const memoizedCpuCount = useMemo(
-    () => (cpuCount !== undefined && cpuCount !== null ? cpuCount : 6),
-    [cpuCount]
-  );
-  const memoizedEnableCounters = useMemo(
-    () => (enableCounters !== undefined ? enableCounters : false),
-    [enableCounters]
-  );
-
-  const handleCpuIncrease = useCallback(() => {
-    onCpuIncrease();
-  }, [onCpuIncrease]);
-
-  const handleCpuDecrease = useCallback(() => {
-    onCpuDecrease();
-  }, [onCpuDecrease]);
+  const memoizedRamSize =
+    ramSize !== undefined && ramSize !== null ? ramSize : DEFAULT_RAM_SIZE;
+  const memoizedCpuCount =
+    cpuCount !== undefined && cpuCount !== null ? cpuCount : DEFAULT_CPU_COUNT;
+  const memoizedEnableCounters =
+    enableCounters !== undefined ? enableCounters : false;
 
   const MemoizedCpuInput = useMemo(() => {
     return (
@@ -90,25 +74,17 @@ const VMSettingsStepComponent = ({
         min={1}
         max={12}
         showControls={true}
-        onIncrease={handleCpuIncrease}
-        onDecrease={handleCpuDecrease}
+        onIncrease={onCpuIncrease}
+        onDecrease={onCpuDecrease}
       />
     );
   }, [
     memoizedCpuCount,
     handleCpuChange,
     cpuError,
-    handleCpuIncrease,
-    handleCpuDecrease,
+    onCpuIncrease,
+    onCpuDecrease,
   ]);
-
-  const handleRamIncrease = useCallback(() => {
-    onRamIncrease();
-  }, [onRamIncrease]);
-
-  const handleRamDecrease = useCallback(() => {
-    onRamDecrease();
-  }, [onRamDecrease]);
 
   const MemoizedRamInput = useMemo(() => {
     return (
@@ -123,20 +99,16 @@ const VMSettingsStepComponent = ({
         min={1}
         max={50}
         showControls={true}
-        onIncrease={handleRamIncrease}
-        onDecrease={handleRamDecrease}
+        onIncrease={onRamIncrease}
+        onDecrease={onRamDecrease}
       />
     );
   }, [
     memoizedRamSize,
     handleRamChange,
     ramError,
-    handleRamIncrease,
-    handleRamDecrease,
-  ]);
-
-  const handleCountersChange = useCallback(onCountersChange, [
-    onCountersChange,
+    onRamIncrease,
+    onRamDecrease,
   ]);
 
   const MemoizedCountersInput = useMemo(() => {
@@ -144,11 +116,11 @@ const VMSettingsStepComponent = ({
       <FormInput
         type="checkbox"
         checked={memoizedEnableCounters}
-        onChange={handleCountersChange}
+        onChange={onCountersChange}
         checkboxLabel="Enable virtualized CPU performance counters"
       />
     );
-  }, [memoizedEnableCounters, handleCountersChange]);
+  }, [memoizedEnableCounters, onCountersChange]);
 
   const MemoizedMemorySlider = useMemo(() => {
     return (

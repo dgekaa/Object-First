@@ -15,19 +15,6 @@ import { ChartWrapper } from './styles';
 const ChartAreaComponent = ({ data, height }: ChartAreaProps): JSX.Element => {
   const gradientId = useMemo(() => getUniqueGradientId(), []);
 
-  const chartConfig = useMemo(
-    () => ({
-      margin: {
-        top: 10,
-        right: 30,
-        left: 0,
-        bottom: 0,
-      },
-      domain: [0, 'dataMax + 200'] as const,
-    }),
-    []
-  );
-
   const axisConfig = useMemo(
     () => ({
       xAxis: {
@@ -73,7 +60,7 @@ const ChartAreaComponent = ({ data, height }: ChartAreaProps): JSX.Element => {
   return (
     <ChartWrapper height={height}>
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={data} margin={chartConfig.margin}>
+        <AreaChart data={data}>
           <defs>
             <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
               <stop
@@ -96,7 +83,7 @@ const ChartAreaComponent = ({ data, height }: ChartAreaProps): JSX.Element => {
           <YAxis
             {...axisConfig.yAxis}
             tickFormatter={formatValue}
-            domain={chartConfig.domain}
+            domain={[0, 'dataMax + 200']}
           />
 
           <Area {...axisConfig.area} />
