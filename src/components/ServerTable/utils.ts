@@ -1,10 +1,11 @@
 import { Z_INDEX } from '../../styles';
+import { AlertType } from '../../types/server';
 
 export const getStatusColor = (status: string): string => {
   return status === 'Running' ? 'var(--color-green)' : 'var(--color-red)';
 };
 
-export const getAlertColor = (type: string): string => {
+export const getAlertColor = (type: AlertType): string => {
   switch (type) {
     case 'Critical':
       return 'var(--color-red)';
@@ -18,8 +19,6 @@ export const getAlertColor = (type: string): string => {
       return 'var(--color-text-secondary)';
   }
 };
-
-type AlertType = 'Critical' | 'Important' | 'Moderate' | 'All good';
 
 export const compareValues = <T>(
   a: T,
@@ -40,98 +39,106 @@ export const compareValues = <T>(
     return (a - b) * sortDirection;
   }
 
-  if (
-    typeof a === 'object' &&
-    typeof b === 'object' &&
-    a !== null &&
-    b !== null &&
-    'type' in a &&
-    'type' in b &&
-    'count' in a &&
-    'count' in b
-  ) {
-    const alertTypeOrder: Record<AlertType, number> = {
-      Critical: 0,
-      Important: 1,
-      Moderate: 2,
-      'All good': 3,
-    };
-
-    const aType = a.type;
-    const bType = b.type;
-
-    if (
-      typeof aType === 'string' &&
-      typeof bType === 'string' &&
-      aType in alertTypeOrder &&
-      bType in alertTypeOrder
-    ) {
-      const isValidAlertType = (type: string): type is AlertType =>
-        type === 'Critical' ||
-        type === 'Important' ||
-        type === 'Moderate' ||
-        type === 'All good';
-
-      if (isValidAlertType(aType) && isValidAlertType(bType)) {
-        const aTypeValue = alertTypeOrder[aType];
-        const bTypeValue = alertTypeOrder[bType];
-
-        if (aType !== bType) {
-          return (aTypeValue - bTypeValue) * sortDirection;
-        }
-      }
-    }
-
-    const aCount = Number(a.count);
-    const bCount = Number(b.count);
-
-    if (!isNaN(aCount) && !isNaN(bCount)) {
-      return (aCount - bCount) * sortDirection;
-    }
-
-    return String(a).localeCompare(String(b)) * sortDirection;
-  }
-
   return String(a).localeCompare(String(b)) * sortDirection;
 };
 
-export const formatCpuUsage = (percent: number): string =>
-  `${percent.toFixed(2)} CPU`;
+const applyStyles = (
+  element: HTMLElement,
+  styles: Record<string, string>
+): void => {
+  Object.assign(element.style, styles);
+};
 
 export const fallbackCopyNotification = (text: string): void => {
-  const notification = document.createElement('div');
-  notification.style.cssText = `
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: 8px;
-    padding: 16px 20px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    z-index: ${Z_INDEX.MODAL_HIGH};
-    font-family: inherit;
-    font-size: 14px;
-    color: var(--color-text-primary);
-    max-width: 400px;
-    word-break: break-all;
-  `;
+  const existingNotification = document.getElementById(
+    'fallback-copy-notification'
+  );
+  if (existingNotification) {
+    existingNotification.remove();
+  }
 
-  notification.innerHTML = `
-    <div style="margin-bottom: 8px; font-weight: 600;">Please copy manually:</div>
-    <div style="background: var(--color-background-subtle); padding: 8px; border-radius: 4px; font-family: monospace;">${text}</div>
-    <div style="margin-top: 8px; font-size: 12px; color: var(--color-text-secondary);">Click anywhere to close</div>
-  `;
+  const notification = document.createElement('div');
+  notification.id = 'fallback-copy-notification';
+
+  applyStyles(notification, {
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    background: 'var(--color-surface)',
+    border: '1px solid var(--color-border-subtle)',
+    borderRadius: '8px',
+    padding: '16px 20px',
+    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
+    zIndex: Z_INDEX.MODAL_HIGH.toString(),
+    fontFamily: 'inherit',
+    fontSize: '14px',
+    color: 'var(--color-text-primary)',
+    maxWidth: '400px',
+    wordBreak: 'break-all',
+  });
+
+  const titleEl = document.createElement('div');
+  applyStyles(titleEl, {
+    marginBottom: '8px',
+    fontWeight: '600',
+  });
+  titleEl.textContent = 'Please copy manually:';
+
+  const contentEl = document.createElement('div');
+  applyStyles(contentEl, {
+    background: 'var(--color-background-subtle)',
+    padding: '8px',
+    borderRadius: '4px',
+    fontFamily: 'monospace',
+    userSelect: 'text',
+    cursor: 'text',
+  });
+  contentEl.textContent = text;
+
+  contentEl.addEventListener('click', e => {
+    e.stopPropagation();
+  });
+
+  const closeButtonEl = document.createElement('button');
+  applyStyles(closeButtonEl, {
+    marginTop: '12px',
+    padding: '6px 12px',
+    backgroundColor: 'var(--color-border-subtle)',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontSize: '12px',
+    display: 'block',
+    marginLeft: 'auto',
+  });
+  closeButtonEl.textContent = 'Close';
+
+  const instructionEl = document.createElement('div');
+  applyStyles(instructionEl, {
+    marginTop: '8px',
+    fontSize: '12px',
+    color: 'var(--color-text-secondary)',
+  });
+  instructionEl.textContent = 'Select text to copy';
+
+  notification.appendChild(titleEl);
+  notification.appendChild(contentEl);
+  notification.appendChild(instructionEl);
+  notification.appendChild(closeButtonEl);
 
   document.body.appendChild(notification);
 
   const removeNotification = (): void => {
+    notification.removeEventListener('click', removeNotification);
+    closeButtonEl.removeEventListener('click', removeNotification);
     if (notification.parentNode) {
       notification.parentNode.removeChild(notification);
     }
   };
 
+  closeButtonEl.addEventListener('click', removeNotification);
   notification.addEventListener('click', removeNotification);
-  setTimeout(removeNotification, 2000);
+
+  setTimeout(removeNotification, 5000);
 };

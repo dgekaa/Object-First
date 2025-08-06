@@ -7,6 +7,7 @@ import {
   SortIconContainerProps,
   UptimeTextProps,
 } from './types';
+import { getAlertColor } from './utils';
 
 const cellWidths = css`
   &:nth-child(1) {
@@ -35,17 +36,6 @@ const cellWidths = css`
   }
 `;
 
-export const HeaderContainer = styled.div`
-  background: transparent;
-  margin-bottom: 8px;
-`;
-
-export const HeaderTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-`;
-
 export const TableContainer = styled.div`
   background: var(--color-surface);
   border-radius: 16px;
@@ -61,8 +51,6 @@ export const Table = styled.table`
 export const TableHeader = styled.thead`
   background: transparent;
 `;
-
-export const HeaderRow = styled.tr``;
 
 export const HeaderCell = styled.th`
   padding: 16px 20px;
@@ -87,8 +75,6 @@ export const SortableHeaderCell = styled(HeaderCell)`
     background-color: var(--color-border-subtle);
   }
 `;
-
-export const TableBody = styled.tbody``;
 
 export const CopyIconButton = styled.button`
   background: none;
@@ -237,20 +223,7 @@ export const AlertStatusIcon = styled.div.withConfig({
   height: 12px;
   border-radius: 50%;
   display: inline-block;
-  background-color: ${(props): string => {
-    switch (props.type) {
-      case 'Critical':
-        return 'var(--color-red)';
-      case 'Important':
-        return 'var(--color-orange)';
-      case 'Moderate':
-        return 'var(--color-yellow)';
-      case 'All good':
-        return 'var(--color-green)';
-      default:
-        return 'var(--color-text-secondary)';
-    }
-  }};
+  background-color: ${(props): string => getAlertColor(props.type)};
 `;
 
 export const AlertText = styled.span.withConfig({

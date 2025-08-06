@@ -20,7 +20,7 @@ export const SortableHeader: React.FC<SortableHeaderProps> = ({
           '↓'
         )
       ) : (
-        <SortIcon width={12} height={12} />
+        <SortIcon width={14} height={14} />
       )}
     </SortIconContainer>
   </SortableHeaderCell>

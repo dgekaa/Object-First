@@ -2,14 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { Server } from '../../types/server';
 import { ServerRow } from './ServerRow';
 import { SortableHeader } from './SortableHeader';
-import {
-  TableContainer,
-  Table,
-  TableHeader,
-  HeaderRow,
-  HeaderCell,
-  TableBody,
-} from './styles';
+import { TableContainer, Table, TableHeader, HeaderCell } from './styles';
 import { ServerTableProps } from './types';
 import { fallbackCopyNotification, compareValues } from './utils';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
@@ -65,7 +58,7 @@ export const ServerTable: React.FC<ServerTableProps> = ({ servers }) => {
     <TableContainer>
       <Table>
         <TableHeader>
-          <HeaderRow>
+          <tr>
             <HeaderCell>ID</HeaderCell>
             <SortableHeader
               title="State"
@@ -97,9 +90,9 @@ export const ServerTable: React.FC<ServerTableProps> = ({ servers }) => {
               onSort={handleSort}
             />
             <HeaderCell>Alerts</HeaderCell>
-          </HeaderRow>
+          </tr>
         </TableHeader>
-        <TableBody>
+        <tbody>
           {sortedServers.map(server => (
             <ServerRow
               key={server.id}
@@ -108,7 +101,7 @@ export const ServerTable: React.FC<ServerTableProps> = ({ servers }) => {
               onStatusToggle={handleToggleServerStatus}
             />
           ))}
-        </TableBody>
+        </tbody>
       </Table>
     </TableContainer>
   );

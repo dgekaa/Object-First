@@ -1,4 +1,4 @@
-import type { Server } from '../../types/server';
+import type { AlertType, Server } from '../../types/server';
 
 export interface ServerTableProps {
   servers: Server[];
@@ -18,11 +18,6 @@ export interface SortableHeaderProps {
   onSort: (column: keyof Server) => void;
 }
 
-export interface SortIconProps {
-  column: keyof Server;
-  active: boolean;
-}
-
 export interface StatusBadgeProps {
   color: string;
 }
@@ -33,7 +28,7 @@ export interface ProgressFillProps {
 }
 
 export interface AlertStatusIconProps {
-  type: string;
+  type: AlertType;
 }
 
 export interface AlertTextProps {

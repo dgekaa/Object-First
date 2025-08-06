@@ -1,3 +1,5 @@
+export type AlertType = 'Critical' | 'Important' | 'Moderate' | 'All good';
+
 export interface Server {
   id: string;
   status: 'Running' | 'Stopped';
@@ -8,7 +10,7 @@ export interface Server {
   uptime: string;
   alerts: {
     count: number;
-    type: 'Critical' | 'Important' | 'Moderate' | 'All good';
+    type: AlertType;
   };
 }
 

@@ -1,7 +1,7 @@
 import { memo, useCallback } from 'react';
 import type { JSX } from 'react';
 import { ServerRowProps } from './types';
-import { getStatusColor, getAlertColor, formatCpuUsage } from './utils';
+import { getStatusColor, getAlertColor } from './utils';
 import { CopyIcon } from '../../icons';
 import {
   TableRow,
@@ -27,6 +27,15 @@ const formatMemoryUsage = (percent: number, value: string): JSX.Element => (
     <div>{value}</div>
     <ProgressBar>
       <ProgressFill width={percent} type="memory" />
+    </ProgressBar>
+  </>
+);
+
+const formatCpuUsageDisplay = (percent: number): JSX.Element => (
+  <>
+    <CpuText>{`${percent.toFixed(2)} CPU`}</CpuText>
+    <ProgressBar>
+      <ProgressFill width={percent} type="cpu" />
     </ProgressBar>
   </>
 );
@@ -72,12 +81,7 @@ const ServerRowComponent = ({
       </TableCell>
       <TableCell>{server.hostServer}</TableCell>
       <TableCell>
-        <CpuContainer>
-          <CpuText>{formatCpuUsage(server.cpuPercent)}</CpuText>
-          <ProgressBar>
-            <ProgressFill width={server.cpuPercent} type="cpu" />
-          </ProgressBar>
-        </CpuContainer>
+        <CpuContainer>{formatCpuUsageDisplay(server.cpuPercent)}</CpuContainer>
       </TableCell>
       <TableCell>
         <MemoryContainer>
