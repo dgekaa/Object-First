@@ -15,6 +15,7 @@ const NotificationIconComponent = ({
 }: NotificationIconProps): JSX.Element => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
   const { hasNew } = useAppSelector(state => state.servers.notifications);
 
   const handleClick = useCallback(() => {

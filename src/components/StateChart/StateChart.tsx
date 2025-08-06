@@ -48,7 +48,13 @@ const StateChartComponent = ({
     <ChartCard title={title}>
       <ChartWrapper>
         <SvgContainer width={size} height={size}>
-          <svg width="100%" height="100%" viewBox={`0 0 ${size} ${size}`}>
+          <svg
+            width="100%"
+            height="100%"
+            viewBox={`0 0 ${size} ${size}`}
+            role="img"
+            aria-label="Server state chart showing running and stopped servers"
+          >
             {segments.map(segment => (
               <AnimatedCircle
                 key={segment.label}
