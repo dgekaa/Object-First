@@ -10,6 +10,7 @@ React application with Redux, TypeScript and strict linting.
 - styled-components for styling
 - pnpm for package management
 - ESLint + Prettier with strict rules
+- Husky for pre-commit hooks and code quality enforcement
 
 ## Usage
 
@@ -29,6 +30,17 @@ pnpm lint
 # Serve production build with compression
 pnpm build && pnpm serve
 ```
+
+## Development Workflow
+
+This project uses Husky to enforce code quality standards:
+
+- **Pre-commit Hook**: Runs lint-staged to:
+  - Run ESLint and auto-fix issues on TypeScript/React files
+  - Format code with Prettier on all changed files
+  - Run Vitest tests related to changed files
+- **Commit Message Hook**: Validates commit messages using commitlint with conventional commit format rules
+- **Pre-push Hook**: Performs TypeScript type checking and ensures the project builds successfully before pushing
 
 ## Performance Optimizations
 
