@@ -1,7 +1,15 @@
-import React, { memo, useState, useRef, useCallback, useEffect } from 'react';
+import React, {
+  memo,
+  useState,
+  useRef,
+  useCallback,
+  useEffect,
+  useMemo,
+} from 'react';
 import type { JSX } from 'react';
 import { MemorySliderProps } from './types';
 import { getSliderPosition, getValueFromPosition } from './utils';
+import { isEmpty } from '../FormInput/utils';
 import {
   SliderContainer,
   Slider,
@@ -17,6 +25,16 @@ import {
   RecommendedText,
 } from './styles';
 
+const MEMORY_OPTIONS = [
+  { value: 0, label: '0 GB' },
+  { value: 16, label: '16 GB' },
+  { value: 32, label: '32 GB' },
+  { value: 50, label: '50 GB' },
+];
+
+const MIN_MEMORY = 0;
+const MAX_MEMORY = 50;
+
 const MemorySliderComponent = ({
   value,
   onChange,
@@ -24,26 +42,26 @@ const MemorySliderComponent = ({
   const [isDragging, setIsDragging] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
 
-  const memoryOptions = [
-    { value: 0, label: '0 GB' },
-    { value: 16, label: '16 GB' },
-    { value: 32, label: '32 GB' },
-    { value: 50, label: '50 GB' },
-  ];
+  const calculateValueFromMouseEvent = useCallback(
+    (clientX: number): number => {
+      if (!sliderRef.current) return 0;
+
+      const rect = sliderRef.current.getBoundingClientRect();
+      const position = ((clientX - rect.left) / rect.width) * 100;
+      return Math.max(
+        MIN_MEMORY,
+        Math.min(MAX_MEMORY, getValueFromPosition(position))
+      );
+    },
+    []
+  );
 
   const handleSliderClick = useCallback(
     (e: React.MouseEvent) => {
-      if (!sliderRef.current) return;
-
-      const rect = sliderRef.current.getBoundingClientRect();
-      const position = ((e.clientX - rect.left) / rect.width) * 100;
-      const newValue = Math.max(
-        0,
-        Math.min(50, getValueFromPosition(position))
-      );
+      const newValue = calculateValueFromMouseEvent(e.clientX);
       onChange(newValue);
     },
-    [onChange]
+    [calculateValueFromMouseEvent, onChange]
   );
 
   const handleMouseDown = useCallback(
@@ -56,17 +74,11 @@ const MemorySliderComponent = ({
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
-      if (!isDragging || !sliderRef.current) return;
-
-      const rect = sliderRef.current.getBoundingClientRect();
-      const position = ((e.clientX - rect.left) / rect.width) * 100;
-      const newValue = Math.max(
-        0,
-        Math.min(50, getValueFromPosition(position))
-      );
+      if (!isDragging) return;
+      const newValue = calculateValueFromMouseEvent(e.clientX);
       onChange(newValue);
     },
-    [isDragging, onChange]
+    [isDragging, calculateValueFromMouseEvent, onChange]
   );
 
   const handleMouseUp = useCallback(() => {
@@ -77,6 +89,7 @@ const MemorySliderComponent = ({
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
+
       return (): void => {
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
@@ -84,13 +97,39 @@ const MemorySliderComponent = ({
     }
   }, [isDragging, handleMouseMove, handleMouseUp]);
 
-  const handleOptionClick = (optionValue: number): void => {
-    onChange(optionValue);
-  };
+  const handleOptionClick = useCallback(
+    (optionValue: number): void => {
+      onChange(optionValue);
+    },
+    [onChange]
+  );
 
-  const currentValue = value === '' ? 0 : Number(value);
+  const currentValue = useMemo(
+    () => (isEmpty(value) ? 0 : Number(value)),
+    [value]
+  );
 
-  const isIndicatorVisible = currentValue >= 0 && currentValue <= 50;
+  const isIndicatorVisible = useMemo(
+    () => currentValue >= MIN_MEMORY && currentValue <= MAX_MEMORY,
+    [currentValue]
+  );
+
+  const sliderPosition = useMemo(() => getSliderPosition(value), [value]);
+
+  const memoryOptionsElements = useMemo(
+    () =>
+      MEMORY_OPTIONS.map(option => (
+        <SliderOption
+          key={option.value}
+          active={currentValue === option.value}
+          position={(option.value / MAX_MEMORY) * 100}
+          onClick={() => handleOptionClick(option.value)}
+        >
+          {option.label}
+        </SliderOption>
+      )),
+    [currentValue, handleOptionClick]
+  );
 
   return (
     <SliderContainer>
@@ -106,17 +145,11 @@ const MemorySliderComponent = ({
         </SliderTrack>
 
         {isIndicatorVisible && (
-          <SliderIndicator
-            position={getSliderPosition(value)}
-            isDragging={isDragging}
-          />
+          <SliderIndicator position={sliderPosition} isDragging={isDragging} />
         )}
 
         {isIndicatorVisible && (
-          <CurrentValue
-            position={getSliderPosition(value)}
-            isDragging={isDragging}
-          >
+          <CurrentValue position={sliderPosition} isDragging={isDragging}>
             {currentValue} GB
           </CurrentValue>
         )}
@@ -125,18 +158,7 @@ const MemorySliderComponent = ({
         <SliderTick position={64} />
       </Slider>
 
-      <SliderScale>
-        {memoryOptions.map(option => (
-          <SliderOption
-            key={option.value}
-            active={currentValue === option.value}
-            position={(option.value / 50) * 100}
-            onClick={() => handleOptionClick(option.value)}
-          >
-            {option.label}
-          </SliderOption>
-        ))}
-      </SliderScale>
+      <SliderScale>{memoryOptionsElements}</SliderScale>
 
       <RecommendedContainer>
         <RecommendedBracket />

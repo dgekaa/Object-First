@@ -6,6 +6,7 @@ import {
   hasValue,
   handleNumericInputChange,
   validateNumberInput,
+  isEmpty,
 } from './utils';
 import { FormInputProps } from './types';
 import {
@@ -35,12 +36,8 @@ const FormInputComponent = (props: FormInputProps): JSX.Element => {
   useEffect(() => {
     if (type === 'number') {
       const { value } = props;
-
       const currentInternalValue = internalValue === '' ? '' : internalValue;
-      const externalValue =
-        value === '' || value === null || value === undefined
-          ? ''
-          : String(value);
+      const externalValue = isEmpty(value) ? '' : String(value);
 
       if (currentInternalValue !== externalValue) {
         setInternalValue(externalValue);
@@ -154,11 +151,13 @@ const FormInputComponent = (props: FormInputProps): JSX.Element => {
                 pattern="[0-9]*"
               />
             </NumberInputWrapper>
+
             {currentError && (
               <ErrorIconContainer>
                 <ErrorIcon />
               </ErrorIconContainer>
             )}
+
             {showControls && onIncrease && onDecrease && !currentError && (
               <NumberInputControls>
                 <NumberControlArrow
@@ -175,6 +174,7 @@ const FormInputComponent = (props: FormInputProps): JSX.Element => {
                 </NumberControlArrow>
               </NumberInputControls>
             )}
+
             <FloatingLabel
               hasValue={hasValue(displayValue)}
               hasError={!!currentError}
