@@ -49,7 +49,11 @@ const ServerRowComponent = ({
       <TableCell>
         <IdContainer>
           <IdContent>
-            <CopyIconButton onClick={handleCopyClick} title="Copy ID">
+            <CopyIconButton
+              onClick={handleCopyClick}
+              title="Copy ID"
+              aria-label="Copy server ID"
+            >
               <CopyIcon />
             </CopyIconButton>
             <IdText>{server.id}</IdText>
@@ -60,6 +64,8 @@ const ServerRowComponent = ({
         <StatusBadge
           color={getStatusColor(server.status)}
           onClick={handleStatusClick}
+          aria-label={`Change server status: ${server.status}`}
+          role="button"
         >
           {server.status}
         </StatusBadge>

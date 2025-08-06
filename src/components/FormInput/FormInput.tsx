@@ -161,10 +161,16 @@ const FormInputComponent = (props: FormInputProps): JSX.Element => {
             )}
             {showControls && onIncrease && onDecrease && !currentError && (
               <NumberInputControls>
-                <NumberControlArrow onClick={handleIncrease}>
+                <NumberControlArrow
+                  onClick={handleIncrease}
+                  aria-label="Increase value"
+                >
                   ▲
                 </NumberControlArrow>
-                <NumberControlArrow onClick={handleDecrease}>
+                <NumberControlArrow
+                  onClick={handleDecrease}
+                  aria-label="Decrease value"
+                >
                   ▼
                 </NumberControlArrow>
               </NumberInputControls>

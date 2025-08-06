@@ -9,13 +9,12 @@ const IconWithBadgeComponent = ({
   showBadge = false,
   badgeColor,
   badgeSize,
-}: IconWithBadgeProps): JSX.Element => {
-  return (
-    <IconButton onClick={onClick}>
-      {icon}
-      {showBadge && <Badge color={badgeColor} size={badgeSize} />}
-    </IconButton>
-  );
-};
+  ariaLabel,
+}: IconWithBadgeProps): JSX.Element => (
+  <IconButton onClick={onClick} aria-label={ariaLabel}>
+    {icon}
+    {showBadge && <Badge color={badgeColor} size={badgeSize} />}
+  </IconButton>
+);
 
 export const IconWithBadge = memo(IconWithBadgeComponent);

@@ -278,11 +278,17 @@ export const NewVMModal = ({
 
   return (
     <>
-      <ModalOverlay onClick={handleBackdropClick}>
+      <ModalOverlay
+        onClick={handleBackdropClick}
+        role="dialog"
+        aria-modal="true"
+      >
         <ModalContainer>
           <ModalHeader>
             <ModalTitle>New virtual machine</ModalTitle>
-            <CloseButton onClick={handleClose}>×</CloseButton>
+            <CloseButton onClick={handleClose} aria-label="Close">
+              ×
+            </CloseButton>
           </ModalHeader>
 
           <ModalContent>

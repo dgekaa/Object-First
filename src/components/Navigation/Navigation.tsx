@@ -25,7 +25,7 @@ export const Navigation = (): JSX.Element => {
     <HeaderWrapper>
       <NavContainer>
         <LeftSection>
-          <LogoContainer to="/">
+          <LogoContainer to="/" aria-label="Home">
             <LogoIcon />
           </LogoContainer>
         </LeftSection>
@@ -35,7 +35,11 @@ export const Navigation = (): JSX.Element => {
 
           <StyledNavLink to="/events">Events</StyledNavLink>
 
-          <HelpButton onClick={handleHelpClick}>
+          <HelpButton
+            onClick={handleHelpClick}
+            aria-expanded={isArrowRotated}
+            aria-haspopup="true"
+          >
             Help
             <ArrowContainer $isRotated={isArrowRotated}>
               <ArrowIcon size={20} />
@@ -46,7 +50,7 @@ export const Navigation = (): JSX.Element => {
         <RightSection>
           <NotificationIcon />
 
-          <AvatarLink to="/profile">
+          <AvatarLink to="/profile" aria-label="User profile">
             <Avatar icon={<UserIcon />} />
           </AvatarLink>
         </RightSection>

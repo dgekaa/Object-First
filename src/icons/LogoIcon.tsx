@@ -7,6 +7,8 @@ export const LogoIcon: React.FC = () => (
     viewBox="0 0 80 25"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    role="img"
+    aria-label="Object First Logo"
   >
     <path
       fillRule="evenodd"

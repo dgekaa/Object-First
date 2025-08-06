@@ -30,6 +30,7 @@ const NotificationIconComponent = ({
       onClick={handleClick}
       icon={<BellIcon size={22} color="var(--color-text-secondary)" />}
       showBadge={hasNew}
+      ariaLabel="Notifications"
     />
   );
 };

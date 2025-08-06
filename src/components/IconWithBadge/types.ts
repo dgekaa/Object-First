@@ -8,4 +8,5 @@ export interface IconWithBadgeProps {
   badgeSize?: number;
   size?: number;
   color?: string;
+  ariaLabel?: string;
 }
